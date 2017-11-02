@@ -1,6 +1,7 @@
 #/usr/bin/python
 import re
 import os
+import time
 
 # Console colors
 W  = '\033[0m'  # white (normal)
@@ -124,6 +125,53 @@ def CIS_Nipper(Folder_Path,CIS_Output):
                                         	f.write('\n')
                                         	f.close()
 
+def file_to_nippercsv(Output_Path):
+        path = Output_Path + '/'
+        dirlist = os.listdir(path)
+        print B+"Making CSV File...."+END
+        for filename in dirlist:
+                vuln_name =  '.'.join(filename.split('.')[0:1])
+                print BOLD+R+vuln_name+END
+                path1 = 'Nipper_CSV.csv'
+                f = open(path1 , 'a+')
+                f.write('\n')
+                f.write(vuln_name)
+                f.write('\n')
+                f.close()
+                dir1 = Output_Path+'/'+filename
+                with open(dir1,'r') as f:
+                        content = f.readlines()
+                        for x in content:
+                                print O+x
+                                #print P+"File exist, Save IP in same file..."
+                                path1 = 'Nipper_CSV.csv'
+                                f = open(path1 , 'a+')
+                                f.write(x)
+                                f.close()
+def file_to_CIScsv(CIS_Output):
+        pathCIS = CIS_Output + '/'
+        dirlist = os.listdir(pathCIS)
+        print B+"Making CSV File...."+END
+        for filename in dirlist:
+                vuln_name =  '.'.join(filename.split('.')[0:1])
+                print BOLD+R+vuln_name+END
+                path1 = 'CISNipper_CSV.csv'
+                f = open(path1 , 'a+')
+                f.write('\n')
+                f.write(vuln_name)
+                f.write('\n')
+                f.close()
+                dir1 = CIS_Output+'/'+filename
+                with open(dir1,'r') as f:
+                        content = f.readlines()
+                        for x in content:
+                                print O+x
+                                #print P+"File exist, Save IP in same file..."
+                                path1 = 'CISNipper_CSV.csv'
+                                f = open(path1 , 'a+')
+                                f.write(x)
+                                f.close()
+
 def main():
         banner()
 	Folder_Path = raw_input(O+"Enter Folder Path Where All Nipper HTML Output Saved (ex: Nipper_Output): ")
@@ -135,6 +183,11 @@ def main():
                 os.makedirs(CIS_Output)
 	Nipper_Vuln(Folder_Path,Output_Path)
 	CIS_Nipper(Folder_Path,CIS_Output)
+	print BOLD+O+"Start Making CSV For Both Nipper and CIS....."+END
+	time.sleep(5)
+	file_to_nippercsv(Output_Path)
+	file_to_CIScsv(CIS_Output)
+	print BOLD+Y+"File Saved ....."+END
 
 if __name__ =='__main__':
         main()
