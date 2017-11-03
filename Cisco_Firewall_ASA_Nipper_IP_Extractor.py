@@ -16,22 +16,27 @@ Y = '\033[93m'
 BOLD = '\033[1m'
 END = '\033[0m'
 
+#banner
+
 def banner():
 
-        print O+'###########################################################################################'
+        print O+'#############################################################################################'
         print '#                        <<<Cisco Firewall ASA Nipper IP Extractor>>>                       #'
-        print '#                                                            				   #'
+        print '#                                                                                           #'
         print '#                                Made by <<RISHABH SHARMA>>                                 #'
 	print '#                                  Twitter : @blacknet22                                    #'
-        print '#                                  operating system : KALI                                  #'
+        print '#                                 operating system : KALI                                   #'
         print '#                                                                                           #'
-        print '############################################################################################'
+        print '#############################################################################################'+END
 
 
+#For extracting IPs from Cisco Firewall ASA nipper HTML output and make file with vulnerabilities name.
 def Nipper_Vuln(Folder_Path,Output_Path):
 	path = Folder_Path + '/'
 	dirlist = os.listdir(path)
+	#use for counting files number
 	countn = 0
+	#Reading HTML output file from mentioned folder
 	path1 = Output_Path+ '/'
 	print B+"Nipper Output..........."
 	for filename in dirlist:
@@ -44,10 +49,11 @@ def Nipper_Vuln(Folder_Path,Output_Path):
 			content = f.readlines()
 			count = 0
 			for x in content:
+				#Help so that file do not read after analysing paticular part of HTML output
 				searchobj1 = re.search(r'(<span class="contentspart">3 <a href="#T133">Vulnerability Audit<\/a><\/span><br \/>)',x, re.I)
+				#Search for vulnerability pattern in HTML output 
 				searchobj = re.search(r'(<span class="contentssect">)(2\.\d)(.*)(">)(.*)(<\/a><\/span><br \/>)', x, re.I)
 				if searchobj1:
-					#print "breaking............."
 					break
 				if searchobj:
 					count = count+1
@@ -56,20 +62,23 @@ def Nipper_Vuln(Folder_Path,Output_Path):
 					a = a.replace('/',' ')
 					vulpath = path1+a+'.txt'
 					if os.path.isfile(vulpath):
-						#print P+"File exist, Save IP in same file..."
+						#if file exist with name then it append IP in that file
 						f = open(vulpath , 'a+')
 						f.write(ip)
 						f.write('\n')
 						f.close()
 					else:
-						#print C+"File not exist, Creating new file..."
+						#if file not exist it made new file
 						f = open(vulpath , 'a+')
                                         	f.write(ip)
 						f.write('\n')
                                         	f.close()
+
+	#Reading files number that analyse so that it confirm that all file analyse.
 	countn = str(countn)
 	print BOLD+O+"Total File Analyse :"+countn+END
 
+#This method is for analysing Nipper CIS benchmark vulnerabilities 
 def CIS_Nipper(Folder_Path,CIS_Output):
 
 	path = Folder_Path + '/'
@@ -100,13 +109,11 @@ def CIS_Nipper(Folder_Path,CIS_Output):
                                 	a = a.replace('/',' ')
                                 	vulpath = path1+a+'.txt'
                                 	if os.path.isfile(vulpath):
-                                        	#print "file exist....................."
                                         	f = open(vulpath , 'a+')
                                         	f.write(ip)
                                         	f.write('\n')
                                         	f.close()
                                 	else:
-                                        	#print "file not exist........................."
                                         	f = open(vulpath , 'a+')
                                         	f.write(ip)
                                         	f.write('\n')
@@ -118,19 +125,18 @@ def CIS_Nipper(Folder_Path,CIS_Output):
                                 	a = a.replace('/',' ')
                                 	vulpath = path1+a+'.txt'
 					if os.path.isfile(vulpath):
-                                        	#print "file exist....................."
                                         	f = open(vulpath , 'a+')
                                         	f.write(ip)
                                         	f.write('\n')
                                        		f.close()
                                 	else:
-                                        	#print "file not exist........................."
                                         	f = open(vulpath , 'a+')
                                         	f.write(ip)
                                         	f.write('\n')
                                         	f.close()
 	print BOLD+O+"Total File Analyse :"+str(countc)+END
 
+#Making csv file for the nipper output
 def file_to_nippercsv(Output_Path):
         path = Output_Path + '/'
         dirlist = os.listdir(path)
@@ -151,14 +157,13 @@ def file_to_nippercsv(Output_Path):
                         content = f.readlines()
                         for x in content:
                                 print O+x
-                                #print P+"File exist, Save IP in same file..."
                                 path1 = 'Nipper_CSV.csv'
                                 f = open(path1 , 'a+')
                                 f.write(x)
                                 f.close()
 	print BOLD+Y+"Total File in Nipper Output Direcory Analyse :"+str(countfn)+END
 
-
+#Making csv file for CIS benchmark
 def file_to_CIScsv(CIS_Output):
         pathCIS = CIS_Output + '/'
         dirlist = os.listdir(pathCIS)
@@ -179,31 +184,25 @@ def file_to_CIScsv(CIS_Output):
                         content = f.readlines()
                         for x in content:
                                 print O+x
-                                #print P+"File exist, Save IP in same file..."
                                 path1 = 'CISNipper_CSV.csv'
                                 f = open(path1 , 'a+')
                                 f.write(x)
                                 f.close()
 	print BOLD+Y+"Total Files in CIS Output Directory Analyse :"+str(countfc)+END
 
-
+#This help to find older version 
 def Version_Checker(Folder_Path,Version_Number):
 	print BOLD+O+"Latest Version :"+Version_Number+END
 	path = Folder_Path + '/'
         dirlist = os.listdir(path)
-       # path1 = Output_Path+ '/'
  	countv = 0 
         for filename in dirlist:
                 ip =  '_'.join(filename.split('_')[0:4])
                 ip = ip.replace('_','.')
-                #print BOLD+R+"IP ADDRESS: <<"+ip+">>"+END
 		countv = countv+1
-		#count= str(count)
-		#print BOLD+O+"Total File Analyse: "+count+END
                 dir1 = Folder_Path+'/'+filename
                 with open(dir1,'r') as f:
                         content = f.readlines()
-                        
                         for x in content:
                                 searchobj = re.search(r'(<tr><td>Cisco Adaptive Security Appliance Firewall<\/td><td>)(.*)(<\/td><td>[\w]+)(.)([\d\.\(\)]+)(<\/td><\/tr>)',x, re.I)
                                 searchobj1 = re.search(r'(<p class="paragraphtitle">Security Audit Summary<\/p>)', x, re.I)
@@ -213,7 +212,6 @@ def Version_Checker(Folder_Path,Version_Number):
 					if (olderversion == Version_Number):
 						print ip+" : "+Version_Number+" :Latest_Version"
 					else:
-						
 						if os.path.isfile("Older_Version.csv"):
 							print C+ip+" : "+olderversion+END
 							f = open("Older_Version.csv" , 'a+')
@@ -236,27 +234,31 @@ def Version_Checker(Folder_Path,Version_Number):
 
 def main():
         banner()
-	Folder_Path = raw_input(O+"Enter Folder Path Where All Nipper HTML Output Saved (ex: Nipper_Output): ")
-	Output_Path = raw_input(O+"Enter Output Folder Name (ex: Nipper_Output): ")
-	if not os.path.exists(Output_Path):
-		os.makedirs(Output_Path)
-	CIS_Output  = raw_input(O+"Enter Nipper CIS Output Folder Name (ex: CIS_Output): ")
-	if not os.path.exists(CIS_Output):
-                os.makedirs(CIS_Output)
-	Nipper_Vuln(Folder_Path,Output_Path)
-	CIS_Nipper(Folder_Path,CIS_Output)
-	print BOLD+O+"Start Making CSV For Both Nipper and CIS....."+END
-	time.sleep(5)
-	file_to_nippercsv(Output_Path)
-	file_to_CIScsv(CIS_Output)
-	print BOLD+Y+"File Saved ....."+END
-	versioncheck = raw_input(Y+"DO You want To Scan For Older Version (ex: Y/N):")
-	if (versioncheck == 'Y'):
-		Version_Number = raw_input(R+"Enter Latest Version of Cisco Adaptive Security Appliance Firewall (ex: 9.8): "+END)
-		Version_Checker(Folder_Path,Version_Number)
+	Note = raw_input(Y+"Nipper HTML output file naming is like this (ex:172_1_1_1_nipper_txt.html).Do you want to proceed? (Y/N): ")
+	if (Note == "Y" or Note == "y"):
+
+		Folder_Path = raw_input(O+"Enter Folder Path Where All Nipper HTML Output Saved (ex: Nipper_Output): ")
+		Output_Path = raw_input(O+"Enter Output Folder Name (ex: Nipper_Output): ")
+		if not os.path.exists(Output_Path):
+			os.makedirs(Output_Path)
+		CIS_Output  = raw_input(O+"Enter Nipper CIS Output Folder Name (ex: CIS_Output): ")
+		if not os.path.exists(CIS_Output):
+                	os.makedirs(CIS_Output)
+		Nipper_Vuln(Folder_Path,Output_Path)
+		CIS_Nipper(Folder_Path,CIS_Output)
+		print BOLD+O+"Start Making CSV For Both Nipper and CIS....."+END
+		time.sleep(5)
+		file_to_nippercsv(Output_Path)
+		file_to_CIScsv(CIS_Output)
+		print BOLD+Y+"File Saved ....."+END
+		versioncheck = raw_input(Y+"DO You want To Scan For Older Version (ex: Y/N):")
+		if (versioncheck == 'Y'):
+			Version_Number = raw_input(R+"Enter Latest Version of Cisco Adaptive Security Appliance Firewall (ex: 9.8): "+END)
+			Version_Checker(Folder_Path,Version_Number)
+		else:
+			print BOLD+O+"Thanks For Using This Tool..."+END
 	else:
 		print BOLD+O+"Thanks For Using This Tool..."+END
-
 
 if __name__ =='__main__':
         main()
