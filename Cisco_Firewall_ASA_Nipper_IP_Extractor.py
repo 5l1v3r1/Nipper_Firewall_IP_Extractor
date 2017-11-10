@@ -96,8 +96,8 @@ def CIS_Nipper(Folder_Path,CIS_Output):
                 	content = f.readlines()
                 	count = 0
                 	for x in content:
-                        	searchobj = re.search(r'(<tr><td>)([\w\s\']*)(<\/td><td>)(.*)(<\/td><td><a href=.*)(">.*)(<\/a><\/td><\/tr>)',x, re.I)
-                        	searchobj1 = re.search(r'(<tr class="evenrow"><td>)([\w\s\']*)(<\/td><td>)(.*)(<\/td><td><a href=.*)(">.*)(<\/a><\/td><\/tr>)', x, re.I)
+                        	searchobj = re.search(r'(<tr><td>)([\w\s\'\d\.\-\(\)]*)(<\/td><td>)(.*)(<\/td><td><a href=.*)(">.*)(<\/a><\/td><\/tr>)',x, re.I)
+                        	searchobj1 = re.search(r'(<tr class="evenrow"><td>)([\w\s\'\d\.\-\(\)]*)(<\/td><td>)(.*)(<\/td><td><a href=.*)(">.*)(<\/a><\/td><\/tr>)', x, re.I)
 				searchobj2 = re.search(r'(<div class="reportparttitle">\d\s)(.*)(Configuration Report<\/a><\/div>)',x, re.I)
 				if searchobj2:
 					print "Breaking......"
@@ -208,6 +208,7 @@ def Version_Checker(Folder_Path,Version_Number):
                                 searchobj1 = re.search(r'(<p class="paragraphtitle">Security Audit Summary<\/p>)', x, re.I)
 				if searchobj:
 					olderversion = searchobj.group(5)
+					version = olderversion
 					olderversion = '('.join(olderversion.split('(')[0:1])
 					if (olderversion == Version_Number):
 						print ip+" : "+Version_Number+" :Latest_Version"
@@ -215,14 +216,14 @@ def Version_Checker(Folder_Path,Version_Number):
 						if os.path.isfile("Older_Version.csv"):
 							print C+ip+" : "+olderversion+END
 							f = open("Older_Version.csv" , 'a+')
-							oldv = ip+","+olderversion
+							oldv = ip+",ASA Version "+version
                                                 	f.write(oldv)
                                                 	f.write('\n')
                                                 	f.close()
                                         	else:
                                                 	print C+ip+" : "+olderversion+END
                                                 	f = open("Older_Version.csv" , 'a+')
-							oldv = ip+","+olderversion
+							oldv = ip+",ASA Version "+version
                                                 	f.write(oldv)
                                                 	f.write('\n')
                                                 	f.close()
